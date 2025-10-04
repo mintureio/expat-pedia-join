@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { Upload, CheckCircle2 } from "lucide-react";
 
@@ -20,9 +21,20 @@ const formSchema = z.object({
   contact: z.string().trim().min(10, "Contact number must be at least 10 digits").max(20, "Contact number must be less than 20 characters"),
   photo: z.instanceof(File).refine((file) => file.size <= MAX_FILE_SIZE, "File size must be less than 5MB")
     .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), "Only .jpg, .jpeg, .png and .webp formats are supported"),
+  isDoctor: z.boolean().optional(),
+  hospitalName: z.string().trim().max(150, "Hospital name must be less than 150 characters").optional(),
+  specialty: z.string().optional(),
   confirmAccuracy: z.boolean().refine((val) => val === true, "You must confirm the accuracy of information"),
   consentUsage: z.boolean().refine((val) => val === true, "You must consent to the use of your content"),
   agreeTerms: z.boolean().refine((val) => val === true, "You must agree to the Terms and Conditions"),
+}).refine((data) => {
+  if (data.isDoctor) {
+    return data.hospitalName && data.hospitalName.length >= 2 && data.specialty;
+  }
+  return true;
+}, {
+  message: "Hospital name and specialty are required for doctors",
+  path: ["hospitalName"],
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -40,6 +52,7 @@ export const RegistrationForm = () => {
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      isDoctor: false,
       confirmAccuracy: false,
       consentUsage: false,
       agreeTerms: false,
@@ -47,6 +60,7 @@ export const RegistrationForm = () => {
   });
 
   const watchPhoto = watch("photo");
+  const watchIsDoctor = watch("isDoctor");
   const watchConfirmAccuracy = watch("confirmAccuracy");
   const watchConsentUsage = watch("consentUsage");
   const watchAgreeTerms = watch("agreeTerms");
@@ -172,6 +186,71 @@ export const RegistrationForm = () => {
           )}
         </div>
       </div>
+
+      <div className="flex items-start space-x-3 p-4 bg-muted/30 rounded-lg border border-border">
+        <Checkbox
+          id="isDoctor"
+          checked={watchIsDoctor}
+          onCheckedChange={(checked) =>
+            setValue("isDoctor", checked as boolean, { shouldValidate: true })
+          }
+        />
+        <Label
+          htmlFor="isDoctor"
+          className="text-sm font-medium cursor-pointer"
+        >
+          I am a doctor
+        </Label>
+      </div>
+
+      {watchIsDoctor && (
+        <div className="grid md:grid-cols-2 gap-6 p-4 bg-accent/5 rounded-lg border border-accent/20 animate-in slide-in-from-top-4 duration-300">
+          <div className="space-y-2">
+            <Label htmlFor="hospitalName">Hospital Name *</Label>
+            <Input
+              id="hospitalName"
+              {...register("hospitalName")}
+              placeholder="City General Hospital"
+              className="transition-smooth"
+            />
+            {errors.hospitalName && (
+              <p className="text-sm text-destructive">{errors.hospitalName.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="specialty">Specialty *</Label>
+            <Select
+              onValueChange={(value) => setValue("specialty", value, { shouldValidate: true })}
+            >
+              <SelectTrigger className="transition-smooth">
+                <SelectValue placeholder="Select your specialty" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="cardiology">Cardiology</SelectItem>
+                <SelectItem value="dermatology">Dermatology</SelectItem>
+                <SelectItem value="endocrinology">Endocrinology</SelectItem>
+                <SelectItem value="gastroenterology">Gastroenterology</SelectItem>
+                <SelectItem value="general-surgery">General Surgery</SelectItem>
+                <SelectItem value="internal-medicine">Internal Medicine</SelectItem>
+                <SelectItem value="neurology">Neurology</SelectItem>
+                <SelectItem value="obstetrics-gynecology">Obstetrics & Gynecology</SelectItem>
+                <SelectItem value="oncology">Oncology</SelectItem>
+                <SelectItem value="ophthalmology">Ophthalmology</SelectItem>
+                <SelectItem value="orthopedics">Orthopedics</SelectItem>
+                <SelectItem value="pediatrics">Pediatrics</SelectItem>
+                <SelectItem value="psychiatry">Psychiatry</SelectItem>
+                <SelectItem value="radiology">Radiology</SelectItem>
+                <SelectItem value="urology">Urology</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+            {errors.specialty && (
+              <p className="text-sm text-destructive">{errors.specialty.message}</p>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="space-y-2">
         <Label htmlFor="photo">High-Resolution Photograph *</Label>
