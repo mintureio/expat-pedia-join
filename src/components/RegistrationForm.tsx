@@ -210,18 +210,20 @@ export const RegistrationForm = () => {
         </div>
       )}
 
-      <div className="space-y-2">
-        <Label htmlFor="organization">Company / Organization Name *</Label>
-        <Input
-          id="organization"
-          {...register("organization")}
-          placeholder="Acme Corporation"
-          className="transition-smooth"
-        />
-        {errors.organization && (
-          <p className="text-sm text-destructive">{errors.organization.message}</p>
-        )}
-      </div>
+      {!watchIsDoctor && (
+        <div className="space-y-2">
+          <Label htmlFor="organization">Company / Organization Name *</Label>
+          <Input
+            id="organization"
+            {...register("organization")}
+            placeholder="Acme Corporation"
+            className="transition-smooth"
+          />
+          {errors.organization && (
+            <p className="text-sm text-destructive">{errors.organization.message}</p>
+          )}
+        </div>
+      )}
 
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">

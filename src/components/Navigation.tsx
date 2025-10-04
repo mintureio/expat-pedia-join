@@ -11,6 +11,7 @@ export const Navigation = () => {
     { path: "/", label: "Home" },
     { path: "/about", label: "About Us" },
     { path: "/register", label: "Register" },
+    { path: "/directory", label: "Directory" },
     { path: "/terms", label: "Terms & Conditions" },
   ];
 
