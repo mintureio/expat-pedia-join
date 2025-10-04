@@ -145,48 +145,6 @@ export const RegistrationForm = () => {
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="organization">Company / Organization Name *</Label>
-        <Input
-          id="organization"
-          {...register("organization")}
-          placeholder="Acme Corporation"
-          className="transition-smooth"
-        />
-        {errors.organization && (
-          <p className="text-sm text-destructive">{errors.organization.message}</p>
-        )}
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email Address *</Label>
-          <Input
-            id="email"
-            type="email"
-            {...register("email")}
-            placeholder="john.doe@example.com"
-            className="transition-smooth"
-          />
-          {errors.email && (
-            <p className="text-sm text-destructive">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="contact">Contact Number *</Label>
-          <Input
-            id="contact"
-            {...register("contact")}
-            placeholder="+1 (555) 123-4567"
-            className="transition-smooth"
-          />
-          {errors.contact && (
-            <p className="text-sm text-destructive">{errors.contact.message}</p>
-          )}
-        </div>
-      </div>
-
       <div className="flex items-start space-x-3 p-4 bg-muted/30 rounded-lg border border-border">
         <Checkbox
           id="isDoctor"
@@ -251,6 +209,48 @@ export const RegistrationForm = () => {
           </div>
         </div>
       )}
+
+      <div className="space-y-2">
+        <Label htmlFor="organization">Company / Organization Name *</Label>
+        <Input
+          id="organization"
+          {...register("organization")}
+          placeholder="Acme Corporation"
+          className="transition-smooth"
+        />
+        {errors.organization && (
+          <p className="text-sm text-destructive">{errors.organization.message}</p>
+        )}
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <Label htmlFor="email">Email Address *</Label>
+          <Input
+            id="email"
+            type="email"
+            {...register("email")}
+            placeholder="john.doe@example.com"
+            className="transition-smooth"
+          />
+          {errors.email && (
+            <p className="text-sm text-destructive">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="contact">Contact Number *</Label>
+          <Input
+            id="contact"
+            {...register("contact")}
+            placeholder="+1 (555) 123-4567"
+            className="transition-smooth"
+          />
+          {errors.contact && (
+            <p className="text-sm text-destructive">{errors.contact.message}</p>
+          )}
+        </div>
+      </div>
 
       <div className="space-y-2">
         <Label htmlFor="photo">High-Resolution Photograph *</Label>
